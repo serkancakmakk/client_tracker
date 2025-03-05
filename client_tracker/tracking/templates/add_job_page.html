@@ -1,0 +1,84 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-lg p-4">
+        <h3 class="mb-3">Yeni İş Ekle</h3>
+
+        <form method="post" action="{% url 'add_job' %}">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="id_employee" class="form-label">Çalışan</label>
+                {{ job_form.employee }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_customer" class="form-label">Müşteri</label>
+                {{ job_form.customer }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_service" class="form-label">Hizmet</label>
+                {{ job_form.service }}
+            </div>
+            <div class="mb-3">
+                <label for="id_service" class="form-label">Randevu Tarihi</label>
+                {{ job_form.appointment_date }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_price" class="form-label">Fiyat</label>
+                {{ job_form.price }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_vat" class="form-label">KDV (%)</label>
+                {{ job_form.vat }}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_total_price" class="form-label">Toplam Fiyat</label>
+                {{ job_form.total_price }}
+            </div>
+            <div class="mb-3">
+                <label for="id_total_price" class="form-label">Bilgi</label>
+                {{ job_form.info }}
+            </div>
+            <button type="submit" class="btn btn-primary">İşi Kaydet</button>
+        </form>
+    </div>
+</div>
+
+<!-- jQuery ve AJAX Kodları -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        function calculateTotal() {
+            let price = parseFloat($("#id_price").val()) || 0;
+            let vat = parseFloat($("#id_vat").val()) || 0;
+            let total = price + (price * vat / 100);
+            $("#id_total_price").val(total.toFixed(2));  // Toplam fiyatı güncelle
+        }
+
+        // Hizmet seçildiğinde fiyatı otomatik getir
+        $("#id_service").change(function() {
+            let serviceId = $(this).val();
+            if (serviceId) {
+                $.ajax({
+                    url: "{% url 'get_service_price' %}",
+                    data: { "service_id": serviceId },
+                    success: function(response) {
+                        $("#id_price").val(response.price);
+                        calculateTotal();  // Toplamı yeniden hesapla
+                    }
+                });
+            }
+        });
+
+        // Fiyat veya KDV değiştiğinde toplam fiyatı hesapla
+        $("#id_price, #id_vat").on("input", calculateTotal);
+    });
+</script>
+
+{% endblock %}

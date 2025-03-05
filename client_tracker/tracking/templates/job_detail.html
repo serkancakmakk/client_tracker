@@ -1,0 +1,249 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <!-- Card Design Start -->
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="m-0">İş Detayı</h4>
+                    <button type="button" id="pending-job" class="btn btn-warning">Beklemeye Al</button>
+                    <button type="button" id="start-job" class="btn btn-warning">İşleme Al</button>
+                    <button type="button" id="complete-job" class="btn btn-success">İşi Tamamla</button>
+                    <button type="button" id="cancel-job" class="btn btn-danger">İşi İptal Et</button>
+
+                </div>
+                <div class="card-body">
+                    <!-- İşin Müşteri ve Çalışan Bilgileri -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong>İşlem Yapılacak:</strong> {{ job.customer }}</p>
+                            <p><strong>Müşteri Telefon:</strong> {{ job.customer.phone }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>İşlem Yapacak:</strong> {{ job.employee }}</p>
+                            <p><strong>İşlem Oluşturan:</strong> {{ job.created_by.first_name }} {{ job.created_by.last_name }}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- İşin Servisi ve Açıklaması -->
+                    <div class="mb-3">
+                        <p><strong>İşlem:</strong> {{ job.service }}</p>
+                        <p><strong>Açıklama:</strong> {{ job.info }}</p>
+                    </div>
+
+                    <!-- Durum ve Oluşturulma Tarihi -->
+                    <div class="mb-3">
+                        <p><strong>Durum:</strong> 
+                            <span id="job-status">
+                                {% if job.status == 'pending' %}
+                                    <span class="badge bg-warning text-dark">Bekliyor</span>
+                                {% elif job.status == 'completed' %}
+                                    <span class="badge bg-success">Tamamlandı</span>
+                                {% elif job.status == 'in_progress' %}
+                                    <span class="badge bg-success"><strong>İşlemde</strong></span>
+                                {% elif job.status == 'cancelled' %}   
+                                <span class="badge bg-danger"><strong>İPTAL</strong></span>
+                                {% endif %}
+                            </span>
+                        </p>
+                        <p><strong>Oluşturulma Tarihi:</strong> {{ job.created_date|date:"d M Y, H:i" }}</p>
+                        <p><strong>Bitiş Tarihi:</strong> <span id="job-end-date">{{ job.end_date|date:"Y-m-d H:i:s" }}</span></p>
+                    </div>
+
+                    <!-- Durum Güncelleme ve İşlem Düğmesi -->
+                    <div class="d-flex justify-content-between mt-4">
+                        {% comment %} <a href="{% url 'job_list' %}" class="btn btn-secondary btn-sm">Tüm İşlere Dön</a>
+                        <a href="{% url 'edit_job' job.id %}" class="btn btn-warning btn-sm">Düzenle</a> {% endcomment %}
+                    </div>
+                </div>
+            </div>
+            <!-- Card Design End -->
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // İşleme Al butonu
+        $("#start-job").click(function() {
+            var jobId = "{{ job.id }}";  // Job ID'yi şablondan alıyoruz
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'job_status_update' %}",  // URL'yi views'den ayarlayacağız
+                data: {
+                    'job_id': jobId,
+                    'status': 'in_progress',  // İşlem yapma durumu
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if(response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'İşlem Başarıyla Başlatıldı!',
+                            text: 'İşlem başarılı bir şekilde başlatıldı.',
+                        });
+
+                        // Durumu güncelle
+                        $("#job-status").html('<span class="badge bg-warning text-dark">Bekliyor</span>');
+
+                        // End date'yi güncelle
+                        if(response.end_date) {
+                            $("#job-end-date").text(response.end_date);  // End date burada ekleniyor
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: response.error || 'İşlem sırasında bir hata oluştu.',
+                        });
+                    }
+                },
+                error: function(xhr, errmsg, err) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata!',
+                        text: 'İşlem sırasında bir hata oluştu.',
+                    });
+                }
+            });
+        });
+
+        // Tamamla butonu
+        $("#complete-job").click(function() {
+            var jobId = "{{ job.id }}";  // Job ID'yi şablondan alıyoruz
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'job_status_update' %}",
+                data: {
+                    'job_id': jobId,
+                    'status': 'completed',  // İş tamamlanma durumu
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if(response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'İş Başarıyla Tamamlandı!',
+                            text: 'İş başarılı bir şekilde tamamlandı.',
+                        });
+
+                        // Durumu güncelle
+                        $("#job-status").html('<span class="badge bg-success">Tamamlandı</span>');
+
+                        // End date'yi güncelle
+                        if(response.end_date) {
+                            $("#job-end-date").text(response.end_date);  // End date burada ekleniyor
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: response.error || 'İşlem sırasında bir hata oluştu.',
+                        });
+                    }
+                },
+                error: function(xhr, errmsg, err) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata!',
+                        text: 'İşlem sırasında bir hata oluştu.',
+                    });
+                }
+            });
+        });
+
+        // İptal Et butonu
+        $("#cancel-job").click(function() {
+            var jobId = "{{ job.id }}";  // Job ID'yi şablondan alıyoruz
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'job_status_update' %}",
+                data: {
+                    'job_id': jobId,
+                    'status': 'cancelled',  // İş iptal durumu
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if(response.success) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'İş İptal Edildi!',
+                            text: 'İş başarıyla iptal edildi.',
+                        });
+
+                        // Durumu güncelle
+                        $("#job-status").html('<span class="badge bg-danger"><strong>İPTAL</strong></span>');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: response.error || 'İşlem sırasında bir hata oluştu.',
+                        });
+                    }
+                },
+                error: function(xhr, errmsg, err) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata!',
+                        text: 'İşlem sırasında bir hata oluştu.',
+                    });
+                }
+            });
+        });
+
+        // Beklemeye Al butonu
+        $("#pending-job").click(function() {
+            var jobId = "{{ job.id }}";  // Job ID'yi şablondan alıyoruz
+
+            $.ajax({
+                type: "POST",
+                url: "{% url 'job_status_update' %}",
+                data: {
+                    'job_id': jobId,
+                    'status': 'pending',  // Beklemeye alma durumu
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if(response.success) {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'İş Beklemeye Alındı!',
+                            text: 'İş başarıyla beklemeye alındı.',
+                        });
+
+                        // Durumu güncelle
+                        $("#job-status").html('<span class="badge bg-secondary">Beklemede</span>');
+
+                        // End date'yi temizle
+                        $("#job-end-date").text('');  // End date temizleniyor
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: response.error || 'İşlem sırasında bir hata oluştu.',
+                        });
+                    }
+                },
+                error: function(xhr, errmsg, err) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata!',
+                        text: 'İşlem sırasında bir hata oluştu.',
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+
+
+{% endblock content %}

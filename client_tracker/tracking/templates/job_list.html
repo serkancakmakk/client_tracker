@@ -1,0 +1,49 @@
+{% extends '_base.html' %}
+
+{% block content %}
+  <div class="container my-5">
+    <h2 class="section-title">Job List</h2>
+    <div class="table-container">
+      <table class="table job-table">
+        <thead id="cadet">
+          <tr>
+            <th>Customer</th>
+            <th>Service</th>
+            <th>Employee</th>
+            <th>Price</th>
+            <th>Total Price</th>
+            <th>Process Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for job in jobs %}
+            <tr class="job-row {{ job.status|lower }}">
+              <td>{{ job.customer.brand_name }}</td>
+              <td>{{ job.service.name }}</td>
+              <td>{{ job.employee.first_name }}</td>
+              <td>{{ job.price }}</td>
+              <td>{{ job.total_price }}</td>
+              <td>{{ job.process_date }}</td>
+              <td>{{ job.status }}</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="7" class="text-center no-jobs">No jobs found</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <style>
+    #cadet th{
+        background-color: #FF7F50 !important;
+        color: white !important;
+    }
+    .job-row.pending td{
+        background-color: aqua;
+    }
+  </style>
+{% endblock content %}

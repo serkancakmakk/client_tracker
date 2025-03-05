@@ -1,0 +1,26 @@
+{% include '_navbar.html' %}
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+{% if messages %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for message in messages %}
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: '{% if message.tags == "success" %}success{% elif message.tags == "error" %}error{% else %}info{% endif %}',
+                title: '{{ message }}',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        {% endfor %}
+    });
+</script>
+{% endif %}
+{% block content %}
+
+
+
+{% endblock content %}
+    

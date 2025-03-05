@@ -1,0 +1,64 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>İş Listesi</h2>
+
+    <!-- DataTable -->
+    <table id="job-table" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Çalışan</th>
+                <th>Müşteri</th>
+                <th>Hizmet</th>
+                <th>Fiyat</th>
+                <th>Randevu Tarihi</th>
+                <th>Durum</th>
+                <th>Detay</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td>{{ job.id }}</td>
+                <td>{{ job.employee }}</td>
+                <td>{{ job.customer }}</td>
+                <td>{{ job.service }}</td>
+                <td>{{ job.price }}</td>
+                <td>{{ job.appointment_date|date:"d-m-Y H:i:s" }}</td>
+                <td style="background-color:
+                {% if job.status == 'pending' %}#ffc107
+                {% elif job.status == 'in_progress' %}#17a2b8
+                {% elif job.status == 'completed' %}#28a745
+                {% elif job.status == 'cancelled' %}#dc3545
+                {% endif %};
+                color: white; font-weight: bold; text-align: center; padding: 5px; border-radius: 5px;">
+                {{ job.get_status_display }}
+            </td>
+            <td><a href="{% url 'job_detail' job.id %}">Detay</a></td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- DataTables JS ve CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#job-table').DataTable({
+        "paging": true,         // Sayfalama
+        "searching": true,      // Arama özelliği
+        "ordering": true,       // Sıralama
+        "info": true,           // Bilgi gösterimi
+        "responsive": true      // Responsive yapı
+    });
+});
+</script>
+
+{% endblock %}
