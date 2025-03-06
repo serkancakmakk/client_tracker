@@ -1,1 +1,40 @@
 {% extends '_base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+
+      <style>
+        .table{
+            margin-top: 100px;
+        }
+      </style>
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Müşteri Kodu</th>
+        <th scope="col">Müşteri Markası</th>
+        <th scope="col">Müşteri Ad Soyad</th>
+        <th scope="col">Müşteri Telefon</th>
+        <th scope="col">Müşteri Detay</th>
+      </tr>
+    </thead>
+    <tbody>    
+        {% for customer in customers  %}
+   
+      <tr>
+        <th scope="row">{{customer.code}}</th>
+        <td>{{customer.brand}}</td>
+        <td>{{customer.owner_name}} {{customer.owner_surname}}</td>
+        <td>{{customer.phone}}</td>
+        <td><a href="{% url 'customer_detail' customer.code %}"><i class="fa-solid fa-arrow-up-right-from-square"></i></a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>  
+</div>
+</div>
+</div>
+{% endblock content %}
+    

@@ -48,8 +48,8 @@
                                 {% endif %}
                             </span>
                         </p>
-                        <p><strong>Oluşturulma Tarihi:</strong> {{ job.created_date|date:"d M Y, H:i" }}</p>
-                        <p><strong>Bitiş Tarihi:</strong> <span id="job-end-date">{{ job.end_date|date:"Y-m-d H:i:s" }}</span></p>
+                        <p><strong>Oluşturulma Tarihi:</strong> {{ job.created_date|date:"d M Y" }}</p>
+                        <p><strong>Bitiş Tarihi:</strong> <span id="job-end-date">{{ job.end_date|date:"Y-m-d" }}</span></p>
                     </div>
 
                     <!-- Durum Güncelleme ve İşlem Düğmesi -->
@@ -105,10 +105,11 @@
                     }
                 },
                 error: function(xhr, errmsg, err) {
+                    var errorMessage = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'İşlem sırasında bir hata oluştu.';
                     Swal.fire({
                         icon: 'error',
                         title: 'Hata!',
-                        text: 'İşlem sırasında bir hata oluştu.',
+                        text: errorMessage,
                     });
                 }
             });
@@ -150,10 +151,11 @@
                     }
                 },
                 error: function(xhr, errmsg, err) {
+                    var errorMessage = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'İşlem sırasında bir hata oluştu.';
                     Swal.fire({
                         icon: 'error',
                         title: 'Hata!',
-                        text: 'İşlem sırasında bir hata oluştu.',
+                        text: errorMessage,
                     });
                 }
             });
@@ -190,10 +192,11 @@
                     }
                 },
                 error: function(xhr, errmsg, err) {
+                    var errorMessage = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'İşlem sırasında bir hata oluştu.';
                     Swal.fire({
                         icon: 'error',
                         title: 'Hata!',
-                        text: 'İşlem sırasında bir hata oluştu.',
+                        text: errorMessage,
                     });
                 }
             });
@@ -233,17 +236,17 @@
                     }
                 },
                 error: function(xhr, errmsg, err) {
+                    var errorMessage = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'İşlem sırasında bir hata oluştu.';
                     Swal.fire({
                         icon: 'error',
                         title: 'Hata!',
-                        text: 'İşlem sırasında bir hata oluştu.',
+                        text: errorMessage,
                     });
                 }
             });
         });
     });
 </script>
-
 
 
 {% endblock content %}

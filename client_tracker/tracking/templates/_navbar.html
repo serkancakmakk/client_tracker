@@ -1,122 +1,15 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Müşteri Takip - Modern Navbar</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <style>
-        /* Genel Stil */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        /* Navbar Stilleri */
-        .navbar {
-            background-color: #ffffff; /* Beyaz arka plan */
-            padding: 10px 20px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Hafif gölge */
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.8rem;
-            color: #2c3e50; /* Koyu mavi-gri renk */
-            display: flex;
-            align-items: center;
-        }
-
-        .navbar-brand i {
-            margin-right: 10px;
-            color: #3498db; /* Mavi renk */
-        }
-
-        .navbar-brand:hover {
-            color: #3498db; /* Hover durumunda mavi renk */
-        }
-
-        .nav-link {
-            font-size: 1rem;
-            color: #2c3e50; /* Koyu mavi-gri renk */
-            padding: 8px 15px;
-            margin: 0 0px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .nav-link:hover {
-            background-color: #3498db; /* Mavi renk */
-            color: #ffffff; /* Beyaz renk */
-        }
-
-        .nav-link.active {
-            background-color: #3498db; /* Mavi renk */
-            color: #ffffff; /* Beyaz renk */
-        }
-
-        /* Buton Stilleri */
-        .btn-custom {
-            background-color: #3498db; /* Mavi renk */
-            color: #ffffff; /* Beyaz renk */
-            font-weight: 600;
-            border-radius: 8px;
-            padding: 8px 20px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-custom:hover {
-            background-color: #2980b9; /* Koyu mavi renk */
-        }
-
-        /* Dropdown Menü Stilleri */
-        .dropdown-menu {
-            border: none;
-            border-radius: 8px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-            margin-top: 10px;
-        }
-
-        .dropdown-item {
-            font-size: 0.95rem;
-            color: #2c3e50; /* Koyu mavi-gri renk */
-            padding: 8px 15px;
-            transition: all 0.3s ease;
-        }
-
-        .dropdown-item:hover {
-            background-color: #f1f1f1; /* Açık gri renk */
-            color: #3498db; /* Mavi renk */
-        }
-
-        /* Bildirim Badge Stili */
-        .badge {
-            font-size: 0.8rem;
-            padding: 4px 8px;
-            margin-left: 5px;
-        }
-
-        /* Mobil Menü Butonu */
-        .navbar-toggler {
-            border: none;
-            padding: 5px;
-        }
-
-        .navbar-toggler:focus {
-            box-shadow: none;
-        }
-
-        .navbar-toggler-icon {
-            color: #2c3e50; /* Koyu mavi-gri renk */
-        }
-    </style>
+    <title>Müşteri Takip</title>
+     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
 </head>
 <body>
 
-<!-- Navbar -->
+
 <nav class="navbar navbar-expand-lg">
     <div class="container">
         <!-- Logo -->
@@ -136,13 +29,19 @@
                     <a class="nav-link active" href="{% url 'dashboard' %}"><i class="fas fa-home"></i> Anasayfa</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="fas fa-user-friends"></i> Müşteriler</a>
+                    <a class="nav-link" href="{% url 'list_customers' %}"><i class="fas fa-user-friends"></i> Müşteriler</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'job_list' %}"><i class="fas fa-tasks"></i> Tüm İşler</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="fas fa-chart-line"></i> Raporlar</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-chart-line"></i> Raporlar
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'upcoming_appointments_report_page' %}"><i class="fa-solid fa-calendar-days"></i> Randevusu Yaklaşanlar</a></li>
+                        <li><a class="dropdown-item" href="{% url 'most_transactions_report' %}"><i class="fas fa-tools"></i>Yapılan İşlemler</a></li>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'add_job_page' %}"><i class="fas fa-plus-circle"></i> İş Ata</a>

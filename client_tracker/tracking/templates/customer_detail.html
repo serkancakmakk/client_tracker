@@ -1,0 +1,183 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<!-- jQuery CDN bağlantısı -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<div class="container mt-5">
+    <div class="card shadow-sm border-0 rounded-lg">
+        <div class="card-header bg-dark text-white">
+            <h2 class="mb-0">{{ customer.brand_name }} Detayı</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Müşteri Bilgileri -->
+                <div class="col-md-6">
+                    <h3 class="h5 text-primary">Müşteri Bilgileri</h3>
+                    <ul class="list-unstyled">
+                        <li><strong>Adı:</strong> {{ customer.owner_name }} {{ customer.owner_surname }}</li>
+                        <li><strong>Kodu:</strong> {{ customer.code }}</li>
+                        <li><strong>Email:</strong> {{ customer.email }}</li>
+                        <li><strong>Telefon:</strong> {{ customer.phone }}</li>
+                        <li><strong>Adres:</strong> {{ customer.address }}</li>
+                        <hr>
+                        <li><strong>Bakiye:</strong> {{ customer.balance }}</li>
+                        <li><strong>Ödenen Tutar:</strong> {{ customer.paid }}</li>
+                    </ul>
+                </div>
+            
+                <!-- Sağ Taraf: Ödeme Alanı -->
+                <div class="col-md-6">
+                    <h3 class="h5 text-primary">Ödeme Alanı</h3>
+                    <form>
+                        <div class="mb-3">
+                            <label for="payment_method" class="form-label">Ödeme Yöntemi</label>
+                            <select id="payment_method" class="form-select">
+                                <option value="credit_card">Kredi Kartı</option>
+                                <option value="paypal">PayPal</option>
+                                <option value="bank_transfer">Banka Havalesi</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">Tutar</label>
+                            <input type="number" id="amount" class="form-control" placeholder="Tutar girin" required>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary">Ödeme Yap</button>
+                        </div>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            // Form gönderildiğinde
+            $("form").submit(function(event) {
+                event.preventDefault();  // Sayfanın yenilenmesini engelle
+        
+                var paymentMethod = $("#payment_method").val();  // Ödeme yöntemini alıyoruz
+                var amount = $("#amount").val();  // Tutarı alıyoruz
+        
+                // Eğer tutar boş ise hata göster
+                if (!amount) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata!',
+                        text: 'Lütfen geçerli bir tutar girin.',
+                    });
+                    return;
+                }
+    
+                // Backend'e veri gönderme için gerekli CSRF token'ı almak
+                var csrf_token = '{{ csrf_token }}';
+    
+                // AJAX ile backend'e veri gönderme
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'payment' customer_id=customer.id %}",  // Backend URL'yi burada belirtmelisiniz
+                    data: {
+                        'payment_method': paymentMethod,
+                        'amount': amount,
+                        'csrfmiddlewaretoken': csrf_token,  // CSRF token
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Başarılı!',
+                                text: 'Ödeme başarılı bir şekilde alındı.',
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Hata!',
+                                text: response.error || 'Ödeme sırasında bir hata oluştu.',
+                            });
+                        }
+                    },
+                    error: function(xhr, errmsg, err) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: 'İşlem sırasında bir hata oluştu.',
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+        <button class="btn btn-success w-100" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+          <strong>Ödemeler <i class="fa-solid fa-arrow-down"></i></strong>
+        </button>
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Tutar</th>
+                            <th>Ödeme Yöntemi</th>
+                            <th>Ödeme Günü</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for customer_payment in customer_payments %}
+                        <tr>
+                            <td>{{ customer_payment.amount }}</td>
+                            <td>{{ customer_payment.payment_method}}</td>
+                            <td>{{ customer_payment.payment_date }}</td>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center">Bu müşterinin iş bilgisi bulunmamaktadır.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+          </div>
+    <!-- Ekstra Bilgiler Tablosu Alt Konumda -->
+    <div class="card shadow-sm border-0 rounded-lg mt-5">
+        <div class="card-body">
+            <h3 class="h5 text-primary">Ekstra Bilgiler</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Servis</th>
+                            <th>Fiyat</th>
+                            <th>Bilgi</th>
+                            <th>Oluşturulma Tarihi</th>
+                            <th>Randevu Tarihi</th>
+                            <th>Bitiş Tarihi</th>
+                            <th>Personel</th>
+                            <th>Durum</th>
+                            <th>İşe Git</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for customer_job in customer_jobs %}
+                        <tr>
+                            <td>{{ customer_job.service }}</td>
+                            <td>{{ customer_job.price}}</td>
+                            <td>{{ customer_job.info }}</td>
+                            <td>{{ customer_job.created_date }}</td>
+                            <td>{{ customer_job.appointment_date }}</td>
+                            <td>{{ customer_job.end_date }}</td>
+                            <td>{{ customer_job.employee }}</td>
+                            <td>{{ customer_job.get_status_display }}</td>
+                            <td><a href="{% url 'job_detail' customer_job.id %}">Detay</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center">Bu müşterinin iş bilgisi bulunmamaktadır.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

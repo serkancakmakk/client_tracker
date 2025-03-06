@@ -68,8 +68,8 @@ class ServiceForm(forms.ModelForm):
 
         widgets = {
             "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Kullanıcı Adı"}),
-            "price": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Kullanıcı Adı"}),
-            "is_active": forms.CheckboxInput(attrs={"class": "form-checkbox", "placeholder": "Ad"}),
+            "price": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Ücret"}),
+            "is_active": forms.CheckboxInput(attrs={"class": "form-checkbox"}),
         }
 
 from django_select2.forms import Select2Widget
@@ -80,7 +80,7 @@ from django_select2.forms import Select2Widget
 class JobForm(forms.ModelForm):
     class Meta:
         model = Job
-        fields = ["employee", "customer", "service", "price", "vat", "total_price", "info", "appointment_date"]
+        fields = ["employee", "customer", "service", "price", "vat", "total_price", "info", "appointment_date","appointment_time"]
         widgets = {
             "employee": Select2Widget(attrs={"class": "form-control"}),  # Select2
             "customer": Select2Widget(attrs={"class": "form-control"}),  # Select2
@@ -89,6 +89,9 @@ class JobForm(forms.ModelForm):
             "vat": forms.NumberInput(attrs={"class": "form-control", "placeholder": "KDV oranı (%)"}),
             "appointment_date": forms.DateInput(
                 attrs={"class": "form-control", "placeholder": "Appointment Date", "type": "date"}
+            ),
+            "appointment_time": forms.TimeInput(
+                attrs={"class": "form-control", "placeholder": "Appointment Date", "type": "time"}
             ),
             "info": forms.Textarea(attrs={"class": "form-control", "placeholder": "Bilgi girin"}),
             "total_price": forms.NumberInput(attrs={"class": "form-control", "readonly": "readonly"}),  # Sadece okunabilir
@@ -99,7 +102,7 @@ class JobForm(forms.ModelForm):
         super(JobForm, self).__init__(*args, **kwargs)
         self.fields["employee"].queryset = User.objects.all()  # Tüm kullanıcıları listele
         self.fields["customer"].queryset = Customer.objects.all()  # Tüm müşterileri listele
-        self.fields["service"].queryset = Services.objects.all()  # Tüm hizmetleri listele
+        self.fields["service"].queryset = Services.objects.filter(is_active=True)  # Tüm hizmetleri listele
 
     def clean(self):
         cleaned_data = super().clean()

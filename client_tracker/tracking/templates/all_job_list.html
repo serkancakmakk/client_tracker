@@ -26,7 +26,7 @@
                 <td>{{ job.customer }}</td>
                 <td>{{ job.service }}</td>
                 <td>{{ job.price }}</td>
-                <td>{{ job.appointment_date|date:"d-m-Y H:i:s" }}</td>
+                <td>{{ job.appointment_date|date:"d-m-Y" }}</td>
                 <td style="background-color:
                 {% if job.status == 'pending' %}#ffc107
                 {% elif job.status == 'in_progress' %}#17a2b8

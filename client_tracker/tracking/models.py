@@ -21,7 +21,9 @@ class Customer(models.Model):
     email = models.EmailField()
     date_joined = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    paid = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    
     def save(self, *args, **kwargs):
         # Make sure to get the actual User instance and assign it to created_by
         if not self.created_by and 'user' in kwargs:
@@ -62,7 +64,8 @@ class Job(models.Model):
     info = models.CharField(max_length=255, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(null=True, blank=True)
-    appointment_date = models.DateTimeField(null=True, blank=True)
+    appointment_date = models.DateField(null=True, blank=True)  # Sadece tarih
+    appointment_time = models.TimeField(null=True,blank=True)
     created_by = models.ForeignKey(
         User, 
         on_delete=models.CASCADE, 
@@ -90,3 +93,11 @@ class Job(models.Model):
 
     def __str__(self):
         return f"{self.customer.brand_name} - {self.service.name} ({self.employee.first_name})"
+class Payment(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_method = models.CharField(max_length=50)
+    payment_date = models.DateTimeField()
+
+    def __str__(self):
+        return f"Payment of {self.amount} to {self.customer.name}"

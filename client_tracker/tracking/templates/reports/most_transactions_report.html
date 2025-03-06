@@ -1,0 +1,114 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2 class="text-center text-primary mb-4">Servis Raporu</h2>
+        
+        <!-- Grafikler -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <canvas id="servicePieChart"></canvas>
+                </div>
+                
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <canvas id="serviceBarChart"></canvas>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Servisler Tablosu -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Servis Adı</th>
+                        <th>Yapılan İş Sayısı</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in service_data %}
+                    <tr>
+                        <td>{{ service.service_name }}</td>
+                        <td>{{ service.job_count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Grafikler İçin Script -->
+    <script>
+        // Servis Raporu Verisi
+        var serviceNames = [{% for service in service_data %}"{{ service.service_name }}"{% if not forloop.last %}, {% endif %}{% endfor %}];
+        var jobCounts = [{% for service in service_data %}{{ service.job_count }}{% if not forloop.last %}, {% endif %}{% endfor %}];
+        
+        // Grafik 1: Pasta Grafik (Pie Chart)
+        var ctx1 = document.getElementById('servicePieChart').getContext('2d');
+        var servicePieChart = new Chart(ctx1, {
+            type: 'doughnut',
+            data: {
+                labels: serviceNames,
+                datasets: [{
+                    label: 'Servisler',
+                    data: jobCounts,
+                    backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#F39C12', '#8E44AD'],
+                    borderColor: ['#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ": " + tooltipItem.raw + " İş";
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    
+        // Grafik 2: Çubuk Grafik (Bar Chart)
+        var ctx2 = document.getElementById('serviceBarChart').getContext('2d');
+        var serviceBarChart = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: serviceNames,
+                datasets: [{
+                    label: 'Yapılan İş Sayısı',
+                    data: jobCounts,
+                    backgroundColor: '#3498DB',
+                    borderColor: '#2980B9',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+
+{% endblock content %}
+    

@@ -3,117 +3,259 @@
 {% block content %}
 <div class="container py-4">
     <div class="row g-4">
-        <!-- Çalışan Ekle -->
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-primary text-white text-center">
-                    <h5 class="mb-0">Çalışan Ekle</h5>
-                </div>
-                <div class="card-body">
-                    <form action="{% url 'add_employee' %}" method="POST">
-                        {% csrf_token %}
-                        {{ employee_form.as_p }}
-                        <button type="submit" class="btn btn-success w-100">Kaydet</button>
-                    </form>
-                </div>
-            </div>
+      <!-- Çalışan Ekle -->
+      <div class="col-md-6">
+        <button class="btn btn-dark mb-4" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+          <i class="fa-solid fa-arrow-up"></i> Çalışanları gör </button>
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-primary text-white text-center">
+            <h5 class="mb-0">Çalışan Ekle </h5>
+          </div>
+          <div class="card-body">
+            <form action="{% url 'add_employee' %}" method="POST"> {% csrf_token %} {{ employee_form.as_p }}
+              <button type="submit" class="btn btn-success w-100">Kaydet</button>
+            </form>
+          </div>
         </div>
-        
-        <!-- Servis Ekle -->
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-primary text-white text-center">
-                    <h5 class="mb-0">Servis Ekle</h5>
-                </div>
-                <div class="card-body">
-                    <form action="{% url 'add_service' %}" method="POST">
-                        {% csrf_token %}
-                        {{ service_form.as_p }}
-                        <button type="submit" class="btn btn-success w-100">Kaydet</button>
-                    </form>
-                </div>
-            </div>
+      </div>
+      <!-- Servis Ekle -->
+      <div class="col-md-6">
+        <button class="btn btn-dark mb-4" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <i class="fa-solid fa-arrow-up"></i> Servisleri gör </button>
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-primary text-white text-center">
+            <h5 class="mb-0">Servis Ekle</h5>
+          </div>
+          <div class="card-body">
+            <form action="{% url 'add_service' %}" method="POST"> {% csrf_token %} {{ service_form.as_p }}
+              <button type="submit" class="btn btn-success w-100">Kaydet</button>
+            </form>
+          </div>
         </div>
-        
-        <!-- Çalışan Listesi -->
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-dark text-white text-center">
-                    <h5 class="mb-0">Çalışan Listesi</h5>
-                </div>
-                <div class="card-body">
-                    <table class="table table-hover text-center">
-                        <thead class="table-light">
-                            <tr>
-                                <th>#</th>
-                                <th>Ad</th>
-                                <th>Soyad</th>
-                                <th>E-posta</th>
-                                <th>Telefon</th>
-                                <th>Durum</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for employee in employees %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ employee.first_name }}</td>
-                                <td>{{ employee.last_name }}</td>
-                                <td>{{ employee.email }}</td>
-                                <td>{{ employee.phone|default:"-" }}</td>
-                                <td>
-                                    <span class="badge {% if employee.is_active %}bg-success{% else %}bg-danger{% endif %}">
-                                        {% if employee.is_active %}Aktif{% else %}Pasif{% endif %}
-                                    </span>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="6" class="text-muted">Henüz çalışan eklenmemiş.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+        <div class="collapse" id="collapseEmployees">
+          <div class="card shadow-sm border-0">
+            <div class="card-header bg-dark text-white text-center">
+              <h5 class="mb-0">Çalışan Listesi</h5>
             </div>
-        </div>
-
-        <!-- Servis Listesi -->
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-dark text-white text-center">
-                    <h5 class="mb-0">Servis Listesi</h5>
-                </div>
-                <div class="card-body">
-                    <table class="table table-hover text-center">
-                        <thead class="table-light">
-                            <tr>
-                                <th>#</th>
-                                <th>Servis Adı</th>
-                                <th>Durum</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for service in services %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ service.name }}</td>
-                                <td>
-                                    <span class="badge {% if service.is_active %}bg-success{% else %}bg-danger{% endif %}">
-                                        {% if service.is_active %}Aktif{% else %}Pasif{% endif %}
-                                    </span>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="3" class="text-muted">Henüz servis eklenmemiş.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+            <div class="card-body">
+              <table class="table table-hover text-center">
+                <thead class="table-light">
+                  <tr>
+                    <th>#</th>
+                    <th>Ad</th>
+                    <th>Soyad</th>
+                    <th>E-posta</th>
+                    <th>Telefon</th>
+                    <th>Durum</th>
+                    <th>Aktif / Pasif</th>
+                  </tr>
+                </thead>
+                <tbody> {% for employee in employees %} <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ employee.first_name }}</td>
+                    <td>{{ employee.last_name }}</td>
+                    <td>{{ employee.email }}</td>
+                    <td>{{ employee.phone|default:"-" }}</td>
+                    <td>
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="employeeStatus{{ employee.id }}" {% if employee.is_active %}checked{% endif %} onclick="toggleEmployeeStatus({{ employee.id }})">
+                        <label class="form-check-label" for="employeeStatus{{ employee.id }}"> {% if employee.is_active %}Aktif{% else %}Pasif{% endif %} </label>
+                      </div>
+                    </td>
+                  </tr> {% empty %} <tr>
+                    <td colspan="7" class="text-muted">Henüz çalışan eklenmemiş.</td>
+                  </tr> {% endfor %} </tbody>
+              </table>
             </div>
+          </div>
         </div>
+      </div>
+      <!-- Çalışan Listesi Collapse -->
+      <div class="col-md-6">
+        <div class="collapse" id="collapseEmployees"></div>
+      </div>
+      <!-- Servis Listesi Collapse -->
     </div>
-</div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Servisler</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="card shadow-sm border-0">
+            <div class="card-header bg-dark text-white text-center">
+              <h5 class="mb-0">Servis Durumu</h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-hover text-center">
+                <thead class="table-light">
+                  <tr>
+                    <th>#</th>
+                    <th>Servis Adı</th>
+                    <th>Aktif / Pasif</th>
+                  </tr>
+                </thead>
+                <tbody> {% for service in services %} <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ service.name }}</td>
+                    <td>
+                      <div class="form-check form-switch">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                        <input class="form-check-input" type="checkbox" id="serviceStatus{{ service.id }}" {% if service.is_active %}checked{% endif %} onclick="toggleServiceStatus({{ service.id }})">
+                        <label class="form-check-label" for="serviceStatus{{ service.id }}"> {% if service.is_active %}Aktif{% else %}Pasif{% endif %} </label>
+                      </div>
+                    </td>
+                  </tr> {% empty %} <tr>
+                    <td colspan="3" class="text-muted">Henüz servis eklenmemiş.</td>
+                  </tr> {% endfor %} </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Servisler</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="card-body">
+            <div class="card shadow-sm border-0">
+              <div class="card-header bg-dark text-white text-center">
+                <h5 class="mb-0">Çalışan Listesi</h5>
+              </div>
+              <div class="card-body">
+                <table class="table table-hover text-center">
+                  <thead class="table-light">
+                    <tr>
+                      <th>#</th>
+                      <th>Ad</th>
+                      <th>Soyad</th>
+                      <th>E-posta</th>
+                      <th>Telefon</th>
+                      <th>Durum</th>
+                    </tr>
+                  </thead>
+                  <tbody> {% for employee in employees %} <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ employee.first_name }}</td>
+                      <td>{{ employee.last_name }}</td>
+                      <td>{{ employee.email }}</td>
+                      <td>{{ employee.phone|default:"-" }}</td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" id="employeeStatus{{ employee.id }}" {% if employee.is_active %}checked{% endif %} onclick="toggleEmployeeStatus({{ employee.id }})">
+                          <label class="form-check-label" for="employeeStatus{{ employee.id }}"> {% if employee.is_active %}Aktif{% else %}Pasif{% endif %} </label>
+                        </div>
+                      </td>
+                    </tr> {% empty %} <tr>
+                      <td colspan="7" class="text-muted">Henüz çalışan eklenmemiş.</td>
+                    </tr> {% endfor %} </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+<script>
+// CSRF token'ını almak için yardımcı fonksiyon
+function getCSRFToken() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    return csrfToken;
+}
+
+// Servis durumu güncelleme fonksiyonu
+function toggleServiceStatus(serviceId) {
+    const switchElement = document.getElementById(`serviceStatus${serviceId}`);
+    const isActive = switchElement.checked;
+
+    // Fetch isteği gönder
+    fetch(`/update_service_status/${serviceId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()  // CSRF token'ı burada alıyoruz
+        },
+        body: JSON.stringify({ is_active: isActive })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Servis durumu başarıyla güncellendi!');
+            // Durumu güncelledikten sonra metni de değiştirebiliriz (aktif/pasif)
+            const statusLabel = document.querySelector(`#serviceStatus${serviceId} + label`);
+            if (statusLabel) {
+                if (isActive) {
+                    statusLabel.innerText = 'Aktif';
+                } else {
+                    statusLabel.innerText = 'Pasif';
+                }
+            }
+        } else {
+            console.error('Durum güncellenemedi:', data.message);
+            // Eğer güncelleme başarısızsa, switch durumunu eski haline getirelim
+            switchElement.checked = !isActive;
+        }
+    })
+    .catch(error => {
+        console.error('Hata oluştu:', error);
+        // Hata durumunda switch'i eski haline getirebiliriz
+        switchElement.checked = !isActive;
+    });
+}
+
+</script>
+<script>
+    function toggleEmployeeStatus(employeeId) {
+        const switchElement = document.getElementById(`employeeStatus${employeeId}`);
+        const isActive = switchElement.checked;
+    
+        // Çalışan durumunu güncellemek için fetch isteği gönder
+        fetch(`/update_employee_status/${employeeId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken(),  // CSRF token'ı burada alıyoruz
+            },
+            body: JSON.stringify({ is_active: isActive })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Durum başarıyla güncellendiyse, badge ve label'ı da güncelle
+                const badgeElement = document.getElementById(`employeeStatusBadge${employeeId}`);
+                const labelElement = document.querySelector(`#employeeStatus${employeeId} + label`);
+    
+                if (isActive) {
+
+                    labelElement.innerText = 'Aktif';
+                } else {
+
+                    labelElement.innerText = 'Pasif';
+                }
+            } else {
+                console.error('Durum güncellenemedi:', data.message);
+                // Hata durumunda switch'i eski haline getirebiliriz
+                switchElement.checked = !isActive;
+            }
+        })
+        .catch(error => {
+            console.error('Hata oluştu:', error);
+            // Hata durumunda switch'i eski haline getirebiliriz
+            switchElement.checked = !isActive;
+        });
+    }
+</script>
 {% endblock content %}

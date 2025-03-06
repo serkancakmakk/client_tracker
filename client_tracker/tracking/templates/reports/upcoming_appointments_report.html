@@ -1,0 +1,109 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    
+
+    
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Takvimi</title>
+
+    <!-- FullCalendar CSS ve JS -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/tr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.8/main.global.min.js"></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let calendarEl = document.getElementById('calendar');
+        
+            let calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth', // Varsayılan görünüm: Ay
+                locale: 'tr',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay' // Gün görünümü eklendi
+                },
+                editable: true, // Sürükle bırak özelliğini aktif eder
+                events: '/api/job-events/', // Etkinlikleri yükleme
+                timeZone: 'local', // Yerel saat dilimi ile gösterim
+                
+                eventDrop: function (info) {
+                    // Yerel zaman diliminde etkinlik tarihini alıyoruz
+                    let eventStartLocal = info.event.start;
+                    
+                    // Yerel saat dilimine göre tarihi alıyoruz
+                    let localStart = eventStartLocal.toLocaleString();  // Güncel yerel zaman diliminde tarih
+
+                    // UTC'ye çeviriyoruz (Zaman dilimi farklarını düzeltiyoruz)
+                    let eventStartUTC = eventStartLocal.toISOString(); // UTC formatına çeviriyoruz
+
+                    fetch('/api/update-job-event/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: JSON.stringify({
+                            id: info.event.id,
+                            start: eventStartUTC // UTC olarak gönderiyoruz
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            console.log('Etkinlik güncellendi:', data);
+                            
+                            // Yeni tarihi ve saati alert olarak göster
+                            let newStart = info.event.start;
+                            let newDate = newStart.toLocaleDateString(); // Yerel tarih formatı
+                            let newTime = newStart.toLocaleTimeString(); // Yerel saat formatı
+
+                            alert('Yeni Tarih: ' + newDate + '\nYeni Zaman: ' + newTime);
+                        } else {
+                            console.error('Hata:', data.message);
+                        }
+                    })
+                    .catch(error => console.error('Fetch error:', error));
+                }
+            });
+        
+            calendar.render();
+        });
+        
+        // CSRF Token alma fonksiyonu
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                let cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    let cookie = cookies[i].trim();
+                    if (cookie.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+</html>
+{% endblock content %}
