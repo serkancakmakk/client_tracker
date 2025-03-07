@@ -32,6 +32,7 @@
                 {% elif job.status == 'in_progress' %}#17a2b8
                 {% elif job.status == 'completed' %}#28a745
                 {% elif job.status == 'cancelled' %}#dc3545
+                {% elif job.status == 'awaited' %}#73C7C7
                 {% endif %};
                 color: white; font-weight: bold; text-align: center; padding: 5px; border-radius: 5px;">
                 {{ job.get_status_display }}

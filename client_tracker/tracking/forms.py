@@ -1,7 +1,7 @@
 from django import forms
-
 from .models import Customer, Job, Services, User
-
+from django_select2.forms import Select2Widget
+from django.contrib.auth.forms import UserCreationForm
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
@@ -19,15 +19,6 @@ class CustomerForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
-
-from django import forms
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
-
-from django import forms
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
-
 class EmployeeForm(UserCreationForm):
     class Meta:
         model = User
@@ -71,12 +62,6 @@ class ServiceForm(forms.ModelForm):
             "price": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Ücret"}),
             "is_active": forms.CheckboxInput(attrs={"class": "form-checkbox"}),
         }
-
-from django_select2.forms import Select2Widget
-from django import forms
-from .models import Job
-from django_select2.forms import Select2Widget
-
 class JobForm(forms.ModelForm):
     class Meta:
         model = Job

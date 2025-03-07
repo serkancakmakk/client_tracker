@@ -84,6 +84,7 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'tracking.User'
 
 
 # Password validation

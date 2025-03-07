@@ -1,15 +1,10 @@
 from django.db import models
 from django.conf import settings
-class User(models.Model):
-    name = models.CharField(max_length=255)
-    surname = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)  # Kullanıcıyı tanımlamak için e-posta kullanılıyor.
+from django.contrib.auth.models import AbstractUser
+class User(AbstractUser):
     phone = models.CharField(max_length=15, blank=True, null=True)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
     def __str__(self):
-        return f"{self.name} {self.surname}"
+        return f"{self.first_name} {self.last_name}"
 from django.contrib.auth import get_user_model
 class Customer(models.Model):
     code = models.CharField(max_length=10, unique=True)
@@ -77,6 +72,7 @@ class Job(models.Model):
         ('in_progress', 'İşlemde'),
         ('completed', 'Tamamlandı'),
         ('cancelled', 'İptal'),
+        ('awaited','Ödeme Bekleniyor'),
     ]
     
     status = models.CharField(

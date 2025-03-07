@@ -82,15 +82,8 @@
                         <li><a class="dropdown-item" href="{% url 'my_job_list' %}"><i class="fas fa-tasks"></i> İşlerim</a></li>
                         <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Ayarlar</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a></li>
+                        <li><a class="dropdown-item text-danger" href="{% url 'logout_view' %}"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a></li>
                     </ul>
-                </li>
-
-                <!-- Yeni Müşteri Butonu -->
-                <li class="nav-item">
-                    <a class="btn btn-custom ms-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        <i class="fas fa-plus"></i> Yeni Müşteri
-                    </a>
                 </li>
             </ul>
         </div>

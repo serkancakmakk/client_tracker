@@ -33,6 +33,6 @@ urlpatterns = [
     path('upcoming_appointments_report_page/', views.upcoming_appointments_report_page, name='upcoming_appointments_report_page'),
     path('update_event/', views.update_event, name='update_event'),
     path('api/update-job-event/', views.update_job_event, name='update_job_event'),  # Sürükleme sonrası güncelleme API
-
+    path("logout",views.logout_view,name="logout_view"),
     path("login",views.login_view,name="login_view"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

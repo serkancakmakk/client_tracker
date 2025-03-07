@@ -12,7 +12,15 @@
                     <button type="button" id="start-job" class="btn btn-warning">İşleme Al</button>
                     <button type="button" id="complete-job" class="btn btn-success">İşi Tamamla</button>
                     <button type="button" id="cancel-job" class="btn btn-danger">İşi İptal Et</button>
-
+                    <button type="button" id="awaited-payment-job" class="btn btn-awaited">Ödeme Gerekli</button>
+<style>
+    .btn-awaited,.bg-awaited{
+        background-color: #A6F1E0;
+    }
+    .btn-awaited:hover{
+        background-color: #73C7C7;
+    }
+</style>
                 </div>
                 <div class="card-body">
                     <!-- İşin Müşteri ve Çalışan Bilgileri -->
@@ -43,6 +51,8 @@
                                     <span class="badge bg-success">Tamamlandı</span>
                                 {% elif job.status == 'in_progress' %}
                                     <span class="badge bg-success"><strong>İşlemde</strong></span>
+                                {% elif job.status == 'awaited' %}
+                                    <span class="badge bg-awaited"><strong>Ödeme Gerekli</strong></span>
                                 {% elif job.status == 'cancelled' %}   
                                 <span class="badge bg-danger"><strong>İPTAL</strong></span>
                                 {% endif %}
@@ -201,7 +211,45 @@
                 }
             });
         });
+        $("#awaited-payment-job").click(function() {
+            var jobId = "{{ job.id }}";  // Job ID'yi şablondan alıyoruz
 
+            $.ajax({
+                type: "POST",
+                url: "{% url 'job_status_update' %}",
+                data: {
+                    'job_id': jobId,
+                    'status': 'awaited',  // İş iptal durumu
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if(response.success) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'İş İçin Ödeme Gerekli!',
+                            text: 'İş İçin Ödeme Gerekli.',
+                        });
+
+                        // Durumu güncelle
+                        $("#job-status").html('<span class="badge bg-awaited"><strong>Ödeme Gerekli</strong></span>');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hata!',
+                            text: response.error || 'İşlem sırasında bir hata oluştu.',
+                        });
+                    }
+                },
+                error: function(xhr, errmsg, err) {
+                    var errorMessage = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'İşlem sırasında bir hata oluştu.';
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Hata!',
+                        text: errorMessage,
+                    });
+                }
+            });
+        });
         // Beklemeye Al butonu
         $("#pending-job").click(function() {
             var jobId = "{{ job.id }}";  // Job ID'yi şablondan alıyoruz
