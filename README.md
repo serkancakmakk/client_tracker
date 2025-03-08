@@ -58,22 +58,14 @@ python manage.py runserver
 - **Veritabanı:** SQLite
 - **Kimlik Doğrulama:** Django Authentication
 
-## API Kullanımı
-
-JSON formatında veri almak için API uç noktaları mevcuttur. Örneğin:
-
-```sh
-GET /api/customers/
-```
-
 ### Giriş Ekranı
 ![Proje Ekran Görüntüsü](client_tracker/assets/giriş_ekranı.png)
 ### Ana Ekran
 ![Proje Ekran Görüntüsü](client_tracker/assets/ana_ekran.png)
 ### Kullanıcı ve Servis Ekleme Ekranı
-![Proje Ekran Görüntüsü](client_tracker/assets/çalışan_servis_ekleme.png)
+![Proje Ekran Görüntüsü](client_tracker/assets/çalışan_servis_ekle.png)
 ### Giriş yapmış kullanıcıya ait işler ekranı
-![Proje Ekran Görüntüsü](client_tracker/assets/baba_ait_işler.png)
+![Proje Ekran Görüntüsü](client_tracker/assets/bana_ait_işler.png)
 ### İş atama ekranı
 ![Proje Ekran Görüntüsü](client_tracker/assets/iş_atama.png)
 ### İş detay ekranı
