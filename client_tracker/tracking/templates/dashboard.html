@@ -1,174 +1,148 @@
 {% extends '_base.html' %}
-
-{% block content %}
-
+ {% block content %}
 <div class="container">
-    <div class="row">
-      <div class="col-md-3">
-        <div class="card shadow-lg p-3 d-flex flex-row align-items-center">
-            <div class="card-body">
-                <h5 class="card-title">Toplam Müşteri</h5>
-                <h3 class="text-primary fw-bold">{{customers.count}}</h3>
-            </div>
-            <div class="ms-auto">
-                <i class="fas fa-users fa-2x text-primary"></i>
-            </div>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card shadow-lg p-3 d-flex flex-row align-items-center">
+        <div class="card-body">
+          <h5 class="card-title">Toplam Müşteri</h5>
+          <h3 class="text-primary fw-bold">{{customers.count}}</h3>
         </div>
+        <div class="ms-auto">
+          <i class="fas fa-users fa-2x text-primary"></i>
+        </div>
+      </div>
     </div>
     <div class="col-md-3">
-        <div class="card shadow-lg p-3 d-flex flex-row align-items-center">
-            <div class="card-body">
-                <h5 class="card-title">Günlük İş</h5>
-                <h3 class="text-success fw-bold">{{all_jobs.count}}</h3>
-            </div>
-            <div class="ms-auto">
-                <i class="fas fa-tasks fa-2x text-success"></i>
-            </div>
+      <div class="card shadow-lg p-3 d-flex flex-row align-items-center">
+        <div class="card-body">
+          <h5 class="card-title">Günlük İş</h5>
+          <h3 class="text-success fw-bold">{{all_jobs.count}}</h3>
         </div>
+        <div class="ms-auto">
+          <i class="fas fa-tasks fa-2x text-success"></i>
+        </div>
+      </div>
     </div>
     <div class="col-md-3">
-        <div class="card shadow-lg p-3 d-flex flex-row align-items-center">
-            <div class="card-body">
-                <h5 class="card-title">Benim İşlerim</h5>
-                <h3 class="text-danger fw-bold">{{user_jobs.count}}</h3>
-            </div>
-            <div class="ms-auto">
-                <i class="fa-solid fa-person-chalkboard fa-2x text-danger"></i>
-            </div>
+      <div class="card shadow-lg p-3 d-flex flex-row align-items-center">
+        <div class="card-body">
+          <h5 class="card-title">Benim İşlerim</h5>
+          <h3 class="text-danger fw-bold">{{user_jobs.count}}</h3>
         </div>
+        <div class="ms-auto">
+          <i class="fa-solid fa-person-chalkboard fa-2x text-danger"></i>
+        </div>
+      </div>
     </div>
     <div class="col-md-3">
-        <div class="card shadow-lg p-3 d-flex flex-row align-items-center">
-            <div class="card-body">
-                <h5 class="card-title">Gelecek İşlemlerim</h5>
-                <h3 class="text-warning fw-bold">{{my_future_works.count}}</h3>
-            </div>
-            <div class="ms-auto">
-                <i class="fa-solid fa-calendar-days fa-2x text-warning"></i>
-            </div>
+      <div class="card shadow-lg p-3 d-flex flex-row align-items-center">
+        <div class="card-body">
+          <h5 class="card-title">Gelecek İşlemlerim</h5>
+          <h3 class="text-warning fw-bold">{{my_future_works.count}}</h3>
         </div>
+        <div class="ms-auto">
+          <i class="fa-solid fa-calendar-days fa-2x text-warning"></i>
+        </div>
+      </div>
     </div>
-    <form action="{% url 'add_customer' %}" method="POST">
-      {% csrf_token %}
-      <div class="card" id="customer_card" style="width: 18rem;">
-          <div class="card-body">
-            <h5 class="card-title text-center">Müşteri Ekle</h5>
-            
-            <div class="mb-3">
-              <label for="basic-url" class="form-label">Müşteri Kodu</label>
-              <div class="input-group">
-                  <input type="text" class="form-control" name="code" id="code" aria-describedby="basic-addon3 basic-addon4">
-                  <button class="btn btn-success" id="generateCode">+</button>
-              </div>
+    <form action="{% url 'add_customer' %}" method="POST"> {% csrf_token %} <div class="card" id="customer_card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title text-center">Müşteri Ekle</h5>
+          <div class="mb-3">
+            <label for="basic-url" class="form-label">Müşteri Kodu</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="code" id="code" aria-describedby="basic-addon3 basic-addon4">
+              <button class="btn btn-success" id="generateCode">+</button>
+            </div>
           </div>
-          
           <script>
-              document.getElementById("generateCode").addEventListener("click", function (event) {
-                  event.preventDefault(); // Butonun formu göndermesini engellemek için
-                  let randomCode = Math.floor(100000 + Math.random() * 900000); // 6 haneli rastgele sayı üretme
-                  document.getElementById("code").value = randomCode; // Input'a yazdırma
-              });
+            document.getElementById("generateCode").addEventListener("click", function(event) {
+              event.preventDefault(); // Butonun formu göndermesini engellemek için
+              let randomCode = Math.floor(100000 + Math.random() * 900000); // 6 haneli rastgele sayı üretme
+              document.getElementById("code").value = randomCode; // Input'a yazdırma
+            });
           </script>
-          
-            <div class="mb-3">
-              <label for="basic-url" class="form-label">Ad</label>
-              <div class="input-group">
-                <input type="text" class="form-control" name="owner_name" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
-              </div>
+          <div class="mb-3">
+            <label for="basic-url" class="form-label">Ad</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="owner_name" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
             </div>
-            <div class="mb-3">
-              <label for="basic-url" class="form-label">Soyad</label>
-              <div class="input-group">
-                <input type="text" class="form-control" name="owner_surname" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="basic-url" class="form-label">Marka Adı</label>
-              <div class="input-group">
-                <input type="text" class="form-control" name="brand_name" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="basic-url" class="form-label">Adres</label>
-              <div class="input-group">
-                <input type="text" class="form-control" name="address" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="basic-url" class="form-label">Telefon</label>
-              <div class="input-group">
-                <input type="text" class="form-control" name="phone" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="basic-url" class="form-label">E-Posta</label>
-              <div class="input-group">
-                <input type="text" class="form-control" name="email" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
-              </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Kaydet</button>
           </div>
+          <div class="mb-3">
+            <label for="basic-url" class="form-label">Soyad</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="owner_surname" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="basic-url" class="form-label">Marka Adı</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="brand_name" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="basic-url" class="form-label">Adres</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="address" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="basic-url" class="form-label">Telefon</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="phone" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="basic-url" class="form-label">E-Posta</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="email" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Kaydet</button>
         </div>
+      </div>
   </div>
   <!--
 Müşteri Ekleme Alanı sonu
 -->
-</form>
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-           
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
-      <!--
-      Müşteri Ekleme Alanı
-      -->
-        <div class="col-4">
-          
-    </div>
+  </form>
 </div>
 <style>
-  *{
+  * {
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-style: normal;
   }
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-  .col-md-3{
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+  .col-md-3 {
     margin-top: 10px;
   }
-    #customer_card{
-        margin-top: 15px;
-    }
-</style>
-{% if messages %}
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            {% for message in messages %}
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: '{% if message.tags == "success" %}success{% elif message.tags == "error" %}error{% else %}info{% endif %}',
-                    title: '{{ message }}',
-                    showConfirmButton: false,
-                    timer: 3000
-                });
-            {% endfor %}
-        });
-    </script>
-{% endif %}
 
+  #customer_card {
+    margin-top: 15px;
+  }
+</style>
+ {% if messages %}
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    {
+      %
+      for message in messages %
+    }
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: '{% if message.tags == "success" %}success{% elif message.tags == "error" %}error{% else %}info{% endif %}',
+      title: '{{ message }}',
+      showConfirmButton: false,
+      timer: 3000
+    }); {
+      % endfor %
+    }
+  });
+</script>
+ {% endif %}
 {% endblock content %}
-    
