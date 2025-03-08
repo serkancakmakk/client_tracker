@@ -70,12 +70,6 @@
           </div>
         </div>
       </div>
-      <!-- Çalışan Listesi Collapse -->
-      <div class="col-md-6">
-        <div class="collapse" id="collapseEmployees"></div>
-      </div>
-      <!-- Servis Listesi Collapse -->
-    </div>
   </div>
   <!-- Modal -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -170,7 +164,7 @@
   </div>
   </div>
 <script>
-// CSRF token'ını almak için yardımcı fonksiyon
+// CSRF token
 function getCSRFToken() {
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     return csrfToken;
@@ -180,8 +174,6 @@ function getCSRFToken() {
 function toggleServiceStatus(serviceId) {
     const switchElement = document.getElementById(`serviceStatus${serviceId}`);
     const isActive = switchElement.checked;
-
-    // Fetch isteği gönder
     fetch(`/update_service_status/${serviceId}/`, {
         method: 'POST',
         headers: {
@@ -194,7 +186,7 @@ function toggleServiceStatus(serviceId) {
     .then(data => {
         if (data.success) {
             console.log('Servis durumu başarıyla güncellendi!');
-            // Durumu güncelledikten sonra metni de değiştirebiliriz (aktif/pasif)
+            // Durumu güncelledikten sonra metni değiştir
             const statusLabel = document.querySelector(`#serviceStatus${serviceId} + label`);
             if (statusLabel) {
                 if (isActive) {

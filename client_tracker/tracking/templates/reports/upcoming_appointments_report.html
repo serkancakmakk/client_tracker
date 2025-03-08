@@ -1,15 +1,6 @@
 {% extends '_base.html' %}
 
 {% block content %}
-    
-
-    
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Takvimi</title>
 
     <!-- FullCalendar CSS ve JS -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
@@ -18,8 +9,8 @@
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
+
+
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -39,7 +30,7 @@
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay' // Gün görünümü eklendi
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay' // Gün görünümü
                 },
                 editable: true, // Sürükle bırak özelliğini aktif eder
                 events: '/api/job-events/', // Etkinlikleri yükleme
@@ -87,8 +78,7 @@
         
             calendar.render();
         });
-        
-        // CSRF Token alma fonksiyonu
+        // CSRF Token
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -104,6 +94,4 @@
             return cookieValue;
         }
     </script>
-</body>
-</html>
 {% endblock content %}

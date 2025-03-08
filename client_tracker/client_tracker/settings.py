@@ -48,9 +48,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'tracking.middleware.LoginRequiredMiddleware', 
 ]
 
 ROOT_URLCONF = 'client_tracker.urls'
+LOGIN_URL = '/login'  # Kullanıcı giriş yapmadığında yönlendirilecek URL
 
 TEMPLATES = [
     {

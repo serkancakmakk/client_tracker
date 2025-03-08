@@ -9,13 +9,13 @@ class CustomerForm(forms.ModelForm):
         exclude = ["created_by"]
 
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)  # Capture the request object
+        self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
 
     def save(self, commit=True):
         instance = super().save(commit=False)
         if self.request and self.request.user.is_authenticated:
-            instance.created_by = self.request.user  # Set created_by to the authenticated user
+            instance.created_by = self.request.user
         if commit:
             instance.save()
         return instance
@@ -42,7 +42,6 @@ class EmployeeForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(EmployeeForm, self).__init__(*args, **kwargs)
-        # Password alanlarına Bootstrap form-control sınıfı ekleme
         self.fields["password1"].widget.attrs.update({"class": "form-control", "placeholder": "Şifre"})
         self.fields["password2"].widget.attrs.update({"class": "form-control", "placeholder": "Şifre Tekrar"})
 class ServiceForm(forms.ModelForm):
@@ -87,7 +86,7 @@ class JobForm(forms.ModelForm):
         super(JobForm, self).__init__(*args, **kwargs)
         self.fields["employee"].queryset = User.objects.all()  # Tüm kullanıcıları listele
         self.fields["customer"].queryset = Customer.objects.all()  # Tüm müşterileri listele
-        self.fields["service"].queryset = Services.objects.filter(is_active=True)  # Tüm hizmetleri listele
+        self.fields["service"].queryset = Services.objects.filter(is_active=True)  # Aktif hizmetleri listele
 
     def clean(self):
         cleaned_data = super().clean()
@@ -96,8 +95,8 @@ class JobForm(forms.ModelForm):
 
         if price is not None and vat is not None:
             total_price = price + (price * vat / 100)  # KDV dahil toplam fiyat
-            cleaned_data["total_price"] = total_price  # Form verisine ekle
+            cleaned_data["total_price"] = total_price  
         else:
-            cleaned_data["total_price"] = None  # Boş bırak
+            cleaned_data["total_price"] = None
 
         return cleaned_data

@@ -1,91 +1,93 @@
 {% extends '_base.html' %}
-
 {% block content %}
 <div class="container mt-5">
     <div class="row">
-        <div class="col-lg-8 offset-lg-2">
-            <!-- Card Design Start -->
-            <div class="card shadow-lg border-0">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h4 class="m-0">İş Detayı</h4>
-                    <button type="button" id="pending-job" class="btn btn-warning">Beklemeye Al</button>
-                    <button type="button" id="start-job" class="btn btn-warning">İşleme Al</button>
-                    <button type="button" id="complete-job" class="btn btn-success">İşi Tamamla</button>
-                    <button type="button" id="cancel-job" class="btn btn-danger">İşi İptal Et</button>
-                    <button type="button" id="awaited-payment-job" class="btn btn-awaited">Ödeme Gerekli</button>
-<style>
-    .btn-awaited,.bg-awaited{
-        background-color: #A6F1E0;
-    }
-    .btn-awaited:hover{
-        background-color: #73C7C7;
-    }
-</style>
-                </div>
-                <div class="card-body">
-                    <!-- İşin Müşteri ve Çalışan Bilgileri -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <p><strong>İşlem Yapılacak:</strong> {{ job.customer }}</p>
-                            <p><strong>Müşteri Telefon:</strong> {{ job.customer.phone }}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <p><strong>İşlem Yapacak:</strong> {{ job.employee }}</p>
-                            <p><strong>İşlem Oluşturan:</strong> {{ job.created_by.first_name }} {{ job.created_by.last_name }}</p>
-                        </div>
-                    </div>
-                    
-                    <!-- İşin Servisi ve Açıklaması -->
-                    <div class="mb-3">
-                        <p><strong>İşlem:</strong> {{ job.service }}</p>
-                        <p><strong>Açıklama:</strong> {{ job.info }}</p>
-                    </div>
-
-                    <!-- Durum ve Oluşturulma Tarihi -->
-                    <div class="mb-3">
-                        <p><strong>Durum:</strong> 
-                            <span id="job-status">
-                                {% if job.status == 'pending' %}
-                                    <span class="badge bg-warning text-dark">Bekliyor</span>
-                                {% elif job.status == 'completed' %}
-                                    <span class="badge bg-success">Tamamlandı</span>
-                                {% elif job.status == 'in_progress' %}
-                                    <span class="badge bg-success"><strong>İşlemde</strong></span>
-                                {% elif job.status == 'awaited' %}
-                                    <span class="badge bg-awaited"><strong>Ödeme Gerekli</strong></span>
-                                {% elif job.status == 'cancelled' %}   
-                                <span class="badge bg-danger"><strong>İPTAL</strong></span>
-                                {% endif %}
-                            </span>
-                        </p>
-                        <p><strong>Oluşturulma Tarihi:</strong> {{ job.created_date|date:"d M Y" }}</p>
-                        <p><strong>Bitiş Tarihi:</strong> <span id="job-end-date">{{ job.end_date|date:"Y-m-d" }}</span></p>
-                    </div>
-
-                    <!-- Durum Güncelleme ve İşlem Düğmesi -->
-                    <div class="d-flex justify-content-between mt-4">
-                        {% comment %} <a href="{% url 'job_list' %}" class="btn btn-secondary btn-sm">Tüm İşlere Dön</a>
-                        <a href="{% url 'edit_job' job.id %}" class="btn btn-warning btn-sm">Düzenle</a> {% endcomment %}
-                    </div>
-                </div>
+      <div class="col-lg-8 offset-lg-2">
+        <!-- Card Design Start -->
+        <div class="card shadow-lg border-0">
+          <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="m-0">İş Detayı</h4>
+            <button type="button" id="pending-job" class="btn btn-warning">Beklemeye Al</button>
+            <button type="button" id="start-job" class="btn btn-warning">İşleme Al</button>
+            <button type="button" id="complete-job" class="btn btn-success">İşi Tamamla</button>
+            <button type="button" id="cancel-job" class="btn btn-danger">İşi İptal Et</button>
+            <button type="button" id="awaited-payment-job" class="btn btn-awaited">Ödeme Gerekli</button>
+            <style>
+              .btn-awaited,
+              .bg-awaited {
+                background-color: #A6F1E0;
+              }
+  
+              .btn-awaited:hover {
+                background-color: #73C7C7;
+              }
+            </style>
+          </div>
+          <div class="card-body">
+            <!-- İşin Müşteri ve Çalışan Bilgileri -->
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <p>
+                  <strong>İşlem Yapılacak:</strong> {{ job.customer }}
+                </p>
+                <p>
+                  <strong>Müşteri Telefon:</strong> {{ job.customer.phone }}
+                </p>
+              </div>
+              <div class="col-md-6">
+                <p>
+                  <strong>İşlem Yapacak:</strong> {{ job.employee }}
+                </p>
+                <p>
+                  <strong>İşlem Oluşturan:</strong> {{ job.created_by.first_name }} {{ job.created_by.last_name }}
+                </p>
+              </div>
             </div>
-            <!-- Card Design End -->
+            <!-- İşin Servisi ve Açıklaması -->
+            <div class="mb-3">
+              <p>
+                <strong>İşlem:</strong> {{ job.service }}
+              </p>
+              <p>
+                <strong>Açıklama:</strong> {{ job.info }}
+              </p>
+            </div>
+            <!-- Durum ve Oluşturulma Tarihi -->
+            <div class="mb-3">
+              <p>
+                <strong>Durum:</strong>
+                <span id="job-status"> {% if job.status == 'pending' %} <span class="badge bg-warning text-dark">Bekliyor</span> {% elif job.status == 'completed' %} <span class="badge bg-success">Tamamlandı</span> {% elif job.status == 'in_progress' %} <span class="badge bg-success">
+                    <strong>İşlemde</strong>
+                  </span> {% elif job.status == 'awaited' %} <span class="badge bg-awaited">
+                    <strong>Ödeme Gerekli</strong>
+                  </span> {% elif job.status == 'cancelled' %} <span class="badge bg-danger">
+                    <strong>İPTAL</strong>
+                  </span> {% endif %} </span>
+              </p>
+              <p>
+                <strong>Oluşturulma Tarihi:</strong> {{ job.created_date|date:"d M Y" }}
+              </p>
+              <p>
+                <strong>Bitiş Tarihi:</strong>
+                <span id="job-end-date">{{ job.end_date|date:"Y-m-d" }}</span>
+              </p>
+            </div>
+          </div>
         </div>
+        <!-- Card Design End -->
+      </div>
     </div>
-</div>
+  </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
     $(document).ready(function() {
         // İşleme Al butonu
         $("#start-job").click(function() {
-            var jobId = "{{ job.id }}";  // Job ID'yi şablondan alıyoruz
+            var jobId = "{{ job.id }}";  // Job ID
 
             $.ajax({
                 type: "POST",
-                url: "{% url 'job_status_update' %}",  // URL'yi views'den ayarlayacağız
+                url: "{% url 'job_status_update' %}",  // URL
                 data: {
                     'job_id': jobId,
                     'status': 'in_progress',  // İşlem yapma durumu
@@ -104,7 +106,7 @@
 
                         // End date'yi güncelle
                         if(response.end_date) {
-                            $("#job-end-date").text(response.end_date);  // End date burada ekleniyor
+                            $("#job-end-date").text(response.end_date);  // End date
                         }
                     } else {
                         Swal.fire({
@@ -127,7 +129,7 @@
 
         // Tamamla butonu
         $("#complete-job").click(function() {
-            var jobId = "{{ job.id }}";  // Job ID'yi şablondan alıyoruz
+            var jobId = "{{ job.id }}";  // Job ID
 
             $.ajax({
                 type: "POST",
@@ -150,7 +152,7 @@
 
                         // End date'yi güncelle
                         if(response.end_date) {
-                            $("#job-end-date").text(response.end_date);  // End date burada ekleniyor
+                            $("#job-end-date").text(response.end_date);  // End date
                         }
                     } else {
                         Swal.fire({
@@ -173,7 +175,7 @@
 
         // İptal Et butonu
         $("#cancel-job").click(function() {
-            var jobId = "{{ job.id }}";  // Job ID'yi şablondan alıyoruz
+            var jobId = "{{ job.id }}";  // Job ID
 
             $.ajax({
                 type: "POST",
@@ -212,14 +214,14 @@
             });
         });
         $("#awaited-payment-job").click(function() {
-            var jobId = "{{ job.id }}";  // Job ID'yi şablondan alıyoruz
+            var jobId = "{{ job.id }}";  // Job ID
 
             $.ajax({
                 type: "POST",
                 url: "{% url 'job_status_update' %}",
                 data: {
                     'job_id': jobId,
-                    'status': 'awaited',  // İş iptal durumu
+                    'status': 'awaited',  // Ödeme gerekli durumu
                     'csrfmiddlewaretoken': '{{ csrf_token }}'
                 },
                 success: function(response) {
@@ -252,7 +254,7 @@
         });
         // Beklemeye Al butonu
         $("#pending-job").click(function() {
-            var jobId = "{{ job.id }}";  // Job ID'yi şablondan alıyoruz
+            var jobId = "{{ job.id }}";  // Job ID
 
             $.ajax({
                 type: "POST",
